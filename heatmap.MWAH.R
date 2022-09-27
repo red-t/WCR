@@ -26,7 +26,7 @@ library(RColorBrewer) # colorRampPalette
 library(grid) # unit
 
 heatmap.file <- 'heatmap.txt'
-jpeg.file <- "out/HiC_heatmap.jpg"
+jpeg.file <- "./HiC_heatmap.jpg"
 shuffle <- 0 # if 1, randomly permute the heatmap to show the 'pre-Lachesis' dataset.
 
 
