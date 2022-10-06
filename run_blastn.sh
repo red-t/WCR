@@ -57,7 +57,7 @@ echo -e "COPY INPUT FILE INTO WORK DIRECTORY"
 [ ! -f ${REF_NAME}.blastdb.nhr ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} makeblastdb -in ${REF_NAME} -dbtype=nucl -out ${REF_NAME}.blastdb -logfile log_blastn
 
 # split input file
-fasta-splitter.pl --n-parts ${N_CHUNK} ${REF_NAME}
+fasta-splitter.pl --n-parts ${N_CHUNK} ${QUERY_NAME}
 
 # run blast
 for CHUNK in {1..${N_CHUNK}};do
