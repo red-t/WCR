@@ -48,5 +48,5 @@ echo -e "COPY INPUT FILE INTO WORK DIRECTORY"
 
 ### Main ###
 [ ! -f ${REF_NAME}.blastdb.nhr ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} makeblastdb -in ${REF_NAME} -dbtype=nucl -out ${REF_NAME}.blastdb -logfile log_blastn
-[ ! -f ${QUERY_NAME}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${QUERY_NAME} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${QUERY_NAME}.blast.out -outfmt 7 &
+[ ! -f ${QUERY_NAME}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${QUERY_NAME} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${QUERY_NAME}.1.blast.out -outfmt 7 &
 ### Main ###
