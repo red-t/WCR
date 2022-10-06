@@ -30,8 +30,8 @@ done
 
 REF_NAME=`basename ${REF_FA}`
 QUERY_NAME=`basename ${QUERY_FA}`
-PREFIX=`${QUERY_NAME%.*}`
-SUFFIX=`${QUERY_NAME##*.}`
+PREFIX=${QUERY_NAME%.*}
+SUFFIX=${QUERY_NAME##*.}
 ######## Getting parameters ########
 
 
@@ -60,8 +60,14 @@ echo -e "COPY INPUT FILE INTO WORK DIRECTORY"
 fasta-splitter.pl --n-parts ${N_CHUNK} ${QUERY_NAME}
 
 # run blast
-for CHUNK in {1..${N_CHUNK}};do
-    [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${PREFIX}.part-${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7 &
+for ((CHUNK=1; CHUNK<=${N_CHUNK}; CHUNK++));do
+    if [ $CHUNK -lt 10 ];then
+        [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${PREFIX}.part-00${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7
+    elif [ $CHUNK -lt 100 ];then
+        [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${PREFIX}.part-0${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7
+    else
+        [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${PREFIX}.part-${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7
+    fi
 done
 
 ### Main ###
