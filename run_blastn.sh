@@ -61,13 +61,15 @@ fasta-splitter.pl --n-parts ${N_CHUNK} ${QUERY_NAME}
 
 # run blast
 for ((CHUNK=1; CHUNK<=${N_CHUNK}; CHUNK++));do
+    echo -e "Process for $CHUNK th CHUNK"
     if [ $CHUNK -lt 10 ];then
-        [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${PREFIX}.part-00${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7
+        [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -num_threads 20 -query ${PREFIX}.part-00${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7 
     elif [ $CHUNK -lt 100 ];then
-        [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${PREFIX}.part-0${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7
+        [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -num_threads 20 -query ${PREFIX}.part-0${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7
     else
-        [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${PREFIX}.part-${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7
+        [ ! -f ${PREFIX}.${CHUNK}.blast.out ] && singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -num_threads 20 -query ${PREFIX}.part-${CHUNK}.${SUFFIX} -db ${REF_NAME}.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out ${PREFIX}.${CHUNK}.blast.out -outfmt 7
     fi
+    [ -f ${PREFIX}.${CHUNK}.blast.out ] && mv ${PREFIX}.${CHUNK}.blast.out /data/tusers/zhongrenhu/WCR/draft_assembly/blast
 done
 
 ### Main ###
