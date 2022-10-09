@@ -38,7 +38,7 @@ cp /data/tusers/zhongrenhu/WCR/draft_assembly/blast/GCF_917563875.1_PGI_DIABVI_V
 echo "Copying query inputs to $TMPDIR"
 if [ $SLURM_ARRAY_TASK_ID -lt 10 ];then
     QUERY=wcr_v0.3.0.part-00$SLURM_ARRAY_TASK_ID.fasta
-elif [ $CHUNK -lt 100 ];then
+elif [ $SLURM_ARRAY_TASK_ID -lt 100 ];then
     QUERY=wcr_v0.3.0.part-0$SLURM_ARRAY_TASK_ID.fasta
 else
     QUERY=wcr_v0.3.0.part-$SLURM_ARRAY_TASK_ID.fasta
