@@ -2,8 +2,8 @@
 #SBATCH --nodes=1
 #SBATCH --time=12:00:00
 #SBATCH --mem=20G
-#SBATCH -c 20
-#SBATCH --array=1-200%5
+#SBATCH -c 36
+#SBATCH --array=42-200%5
 #SBATCH --partition=12hours
 #SBATCH --output=/data/tusers.ds/zhongrenhu/WCR/logs/blastn-log-%A-%a
 
@@ -50,7 +50,7 @@ echo ""
 
 # Process the data
 echo "Running BLASTN for $QUERY" && date
-singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -query ${QUERY} -db GCF_917563875.1_PGI_DIABVI_V3a_genomic.fasta.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out wcr_v0.3.0.$SLURM_ARRAY_TASK_ID.blast.out -outfmt 7
+singularity exec -B ${PWD}:/home/${USER} ${BLAST_IMAGE} blastn -num_threads 24 -query ${QUERY} -db GCF_917563875.1_PGI_DIABVI_V3a_genomic.fasta.blastdb -perc_identity 95 -evalue 1e-30 -word_size 50 -out wcr_v0.3.0.$SLURM_ARRAY_TASK_ID.blast.out -outfmt 7
 echo "Done."
 echo ""
 date
