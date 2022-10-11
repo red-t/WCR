@@ -1,0 +1,116 @@
+SPECIES = wcr
+OUTPUT_DIR = lachesis_scaffold/round1
+DRAFT_ASSEMBLY_FASTA = draft_assembly/wcr_v0.3.0.fasta
+SAM_DIR = HiC
+SAM_FILES = HiC-WCR-ov2-10cycle.REduced.paired_only.bam
+RE_SITE_SEQ = AAGCTT
+USE_REFERENCE = 1
+SIM_BIN_SIZE = 0
+REF_ASSEMBLY_FASTA = draft_assembly/GCF_917563875.1_PGI_DIABVI_V3a_genomic.fasta
+BLAST_FILE_HEAD = draft_assembly/wcr_v0.3.0
+DO_CLUSTERING = 1
+DO_ORDERING   = 1
+DO_REPORTING  = 1
+OVERWRITE_GLM = 0
+OVERWRITE_CLMS = 0
+CLUSTER_N = 10
+CLUSTER_CONTIGS_WITH_CENS = -1
+CLUSTER_MIN_RE_SITES = 10
+CLUSTER_MAX_LINK_DENSITY = 2
+CLUSTER_NONINFORMATIVE_RATIO = 3
+CLUSTER_DRAW_HEATMAP = 1
+CLUSTER_DRAW_DOTPLOT = 1
+ORDER_MIN_N_RES_IN_TRUNK = 300
+ORDER_MIN_N_RES_IN_SHREDS = 8
+ORDER_DRAW_DOTPLOTS = 1
+REPORT_EXCLUDED_GROUPS = -1
+REPORT_QUALITY_FILTER = 1
+REPORT_DRAW_HEATMAP = 1
+
+
+
+
+
+ReportChart!
+
+Info about input assembly:
+DE NOVO ASSEMBLY, reference genome available for validation
+Species: wcr
+N chromosomes in reference, including non-canonical:	10
+N contigs:	59295		Total length:	3317893667		N50:	105449
+N clusters (derived):		10
+N non-singleton clusters:	10
+N orderings found:		10
+
+
+############################
+#                          #
+#    CLUSTERING METRICS    #
+#                          #
+############################
+
+
+Number of contigs in clusters:	39005		(65.78% of all contigs)
+Length of contigs in clusters:	2886861853	(87.01% of all sequence length)
+
++---------+----------------+---------+---------------+------------------+-------------+-------------------+----------------------+
+| CLUSTER |   PLURALITY    | Number of contigs in cluster...            | Length of contigs in cluster...                        |
+| NUMBER  |   CHROMOSOME   |  TOTAL  |   UNALIGNED   | WRONG CHROMOSOME |    TOTAL    |     UNALIGNED     |   WRONG CHROMOSOME   |
++---------+----------------+---------+---------------+------------------+-------------+-------------------+----------------------+
+|     0   |  NC_065446.1   |   9200  |  245 (  2.66%)|  6056  ( 67.63%) |   804986331 |  4562027 ( 0.567%)| 550875533  (68.823%) |
+|     1   |  NC_065448.1   |   5238  |   45 (  0.86%)|  1690  ( 32.54%) |   377443806 |   595266 ( 0.158%)| 116467763  (30.906%) |
+|     2   |  NC_065444.1   |   4250  |   44 (  1.04%)|   576  ( 13.69%) |   324775569 |   443780 ( 0.137%)|  36018688  (11.106%) |
+|     3   |  NC_065445.1   |   4196  |   30 (  0.71%)|   528  ( 12.67%) |   302876286 |   260842 ( 0.086%)|  30135873  ( 9.958%) |
+|     4   |  NC_065449.1   |   3891  |   34 (  0.87%)|   553  ( 14.34%) |   283655486 |   242354 ( 0.085%)|  32371848  (11.422%) |
+|     5   |  NC_065443.1   |   3097  |   20 (  0.65%)|   450  ( 14.62%) |   213652580 |   169940 ( 0.080%)|  28471787  (13.337%) |
+|     6   |  NC_065443.1   |   2664  |   24 (  0.90%)|   387  ( 14.66%) |   169513060 |   278098 ( 0.164%)|  17294560  (10.219%) |
+|     7   |  NC_065447.1   |   2435  |   21 (  0.86%)|   353  ( 14.62%) |   160041594 |   161035 ( 0.101%)|  18169644  (11.365%) |
+|     8   |  NC_065447.1   |   2313  |   35 (  1.51%)|   384  ( 16.86%) |   150065748 |   347715 ( 0.232%)|  16908849  (11.294%) |
+|     9   |  NC_065451.1   |   1721  |   34 (  1.98%)|   354  ( 20.98%) |    99851393 |   309902 ( 0.310%)|  14609303  (14.677%) |
++---------+----------------+---------+---------------+------------------+-------------+-------------------+----------------------+
+|       TOTAL              |  39005  |  532 (  1.36%)| 11331  ( 29.45%) |  2886861853 |  7370959 ( 0.255%)| 861323848  (29.912%) |
++---------+----------------+---------+---------------+------------------+-------------+-------------------+----------------------+
+
+
+############################
+#                          #
+#     ORDERING METRICS     #
+#                          #
+############################
+
+
+Number of contigs in orderings:	26111		(66.94% of all contigs in clusters, 44.04% of all contigs)
+Length of contigs in orderings:	2625155955	(90.93% of all length in clusters, 79.12% of all sequence length)
+Number of contigs in trunks:	54		(0.2068% of contigs in orderings)
+Length of contigs in trunks:	76426082	(2.911% of length in orderings)
+
+Fraction of contigs in orderings with high orientation quality:	22758 (87.16%), with length 2422065230 (92.26%)
+Fraction of contigs in trunks    with high orientation quality:	52 (96.3%), with length 74115816 (96.98%)
+
++-------------+---------------------------+--------------+--------------+
+| TRUNK/FULL? |  ERROR TYPE               |  % CONTIGS   |   % LENGTH   |
++-------------+---------------------------+--------------+--------------+
+|  TRUNK      | Inter-chromosome errors   |     20.37%   |     18.82%   |
+|  TRUNK      | Ordering errors           |     14.81%   |     14.66%   |
+|  TRUNK      | Ordering errors    (HQ)   |     15.38%   |     15.12%   |
+|  TRUNK      | Orientation errors        |     25.93%   |     25.52%   |
+|  TRUNK      | Orientation errors (HQ)   |     25.00%   |     24.86%   |
++-------------+---------------------------+--------------+--------------+
+|  FULL ORDER | Inter-chromosome errors   |     27.35%   |     22.96%   |
+|  FULL ORDER | Ordering errors           |     34.81%   |     34.74%   |
+|  FULL ORDER | Ordering errors    (HQ)   |     36.73%   |     35.69%   |
+|  FULL ORDER | Orientation errors        |     33.29%   |     31.54%   |
+|  FULL ORDER | Orientation errors (HQ)   |     34.62%   |     32.07%   |
++-------------+---------------------------+--------------+--------------+
+
+
+###################################
+
+Definitions:
+'Plurality chromosome':		The plurality chromosome for a cluster is the chromosome that contains the most contigs (by length!) in that cluster.
+				Contigs are considered mis-clustered if they align to a canonical chromosome other than the plurality chromosome.
+'Inter-chromosome error':	Two contigs are adjacent in an ordering but align to different canonical chromosomes.
+'Ordering error':		Three contigs are adjacent in an ordering, but their relative position in the ordering doesn't match the relative positions of their true alignments.
+'Orientation error':		A contig's assigned orientation in its ordering doesn't match the orientation it should have, imputed from its and its neighbors' true alignment position.
+
+
