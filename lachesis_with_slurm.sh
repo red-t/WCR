@@ -1,12 +1,15 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --time=12:00:00
-#SBATCH --mem=20G
+#SBATCH --time=4:00:00
+#SBATCH --mem=40G
 #SBATCH -c 30
-#SBATCH --array=2-10%3
-#SBATCH --partition=12hours
+#SBATCH --array=1001-2000%30
+#SBATCH --partition=4hours
 #SBATCH --output=/data/tusers.ds/zhongrenhu/WCR/logs/lachesis-log-%A-%a
 
+MINWAIT=120
+MAXWAIT=240
+sleep $((MINWAIT+RANDOM % (MAXWAIT-MINWAIT)))
 
 # Random integer function
 function rand_int() {
