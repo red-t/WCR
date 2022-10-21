@@ -356,56 +356,58 @@ then
         fi
 
 	source ${juiceDir}/scripts/common/countligations.sh
-	if [ -z "$chimeric" ]
-        then
-        # Align fastq pair
-            echo "bwa mem -SP5M $threadstring $refSeq $name1$ext $name2$ext > $name$ext.sam"
-
-            bwa mem -SP5M $threadstring $refSeq $name1$ext $name2$ext > $name$ext.sam
-            if [ $? -ne 0 ]
+    if [ ! -f $name${ext}.sort.txt ];then
+        if [ -z "$chimeric" ]
             then
-                echo "***! Alignment of $name1$ext $name2$ext failed."
+            # Align fastq pair
+                echo "bwa mem -SP5M $threadstring $refSeq $name1$ext $name2$ext > $name$ext.sam"
+
+                bwa mem -SP5M $threadstring $refSeq $name1$ext $name2$ext > $name$ext.sam
+                if [ $? -ne 0 ]
+                then
+                    echo "***! Alignment of $name1$ext $name2$ext failed."
+                    exit 1
+                else                                                            
+            echo "(-:  Align of $name$ext.sam done successfully"
+                fi                                    
+            fi                                                              
+        
+            # call chimeric_blacklist.awk to deal with chimeric reads; 
+            # sorted file is sorted by read name at this point
+        touch $name${ext}_abnorm.sam $name${ext}_unmapped.sam  
+        awk -v "fname1"=$name${ext}_norm.txt -v "fname2"=$name${ext}_abnorm.sam -v "fname3"=$name${ext}_unmapped.sam -f ${juiceDir}/scripts/common/chimeric_blacklist.awk $name$ext.sam
+        if [ $? -ne 0 ]
+        then
+                echo "***! Failure during chimera handling of $name${ext}"
                 exit 1
-            else                                                            
-		echo "(-:  Align of $name$ext.sam done successfully"
-            fi                                    
-        fi                                                              
-    
-        # call chimeric_blacklist.awk to deal with chimeric reads; 
-        # sorted file is sorted by read name at this point
-	touch $name${ext}_abnorm.sam $name${ext}_unmapped.sam  
-	awk -v "fname1"=$name${ext}_norm.txt -v "fname2"=$name${ext}_abnorm.sam -v "fname3"=$name${ext}_unmapped.sam -f ${juiceDir}/scripts/common/chimeric_blacklist.awk $name$ext.sam
-	if [ $? -ne 0 ]
-	then
-            echo "***! Failure during chimera handling of $name${ext}"
-            exit 1
-	fi
-        # if any normal reads were written, find what fragment they correspond to 
-        # and store that
-	if [ -e "$name${ext}_norm.txt" ] && [ "$site" != "none" ] && [ -e "$site_file" ]
-	then
-            ${juiceDir}/scripts/common/fragment.pl $name${ext}_norm.txt $name${ext}.frag.txt $site_file                                                                
-	elif [ "$site" == "none" ] || [ "$nofrag" -eq 1 ] 
-	then
-            awk '{printf("%s %s %s %d %s %s %s %d", $1, $2, $3, 0, $4, $5, $6, 1); for (i=7; i<=NF; i++) {printf(" %s",$i);}printf("\n");}' $name${ext}_norm.txt > $name${ext}.frag.txt
-	else                                                                    
-            echo "***! No $name${ext}_norm.txt file created"
-            exit 1
-	fi                                                                      
-	if [ $? -ne 0 ]
-	then
-            echo "***! Failure during fragment assignment of $name${ext}"
-            exit 1
-	fi                              
-        # sort by chromosome, fragment, strand, and position                    
-	sort -T $tmpdir -k2,2d -k6,6d -k4,4n -k8,8n -k1,1n -k5,5n -k3,3n $name${ext}.frag.txt > $name${ext}.sort.txt
-	if [ $? -ne 0 ]
-	then
-            echo "***! Failure during sort of $name${ext}"
-            exit 1
-	else
-            rm $name${ext}_norm.txt $name${ext}.frag.txt
-	fi
+        fi
+            # if any normal reads were written, find what fragment they correspond to 
+            # and store that
+        if [ -e "$name${ext}_norm.txt" ] && [ "$site" != "none" ] && [ -e "$site_file" ]
+        then
+                ${juiceDir}/scripts/common/fragment.pl $name${ext}_norm.txt $name${ext}.frag.txt $site_file                                                                
+        elif [ "$site" == "none" ] || [ "$nofrag" -eq 1 ] 
+        then
+                awk '{printf("%s %s %s %d %s %s %s %d", $1, $2, $3, 0, $4, $5, $6, 1); for (i=7; i<=NF; i++) {printf(" %s",$i);}printf("\n");}' $name${ext}_norm.txt > $name${ext}.frag.txt
+        else                                                                    
+                echo "***! No $name${ext}_norm.txt file created"
+                exit 1
+        fi                                                                      
+        if [ $? -ne 0 ]
+        then
+                echo "***! Failure during fragment assignment of $name${ext}"
+                exit 1
+        fi                              
+            # sort by chromosome, fragment, strand, and position                    
+        sort -T $tmpdir -k2,2d -k6,6d -k4,4n -k8,8n -k1,1n -k5,5n -k3,3n $name${ext}.frag.txt > $name${ext}.sort.txt
+        if [ $? -ne 0 ]
+        then
+                echo "***! Failure during sort of $name${ext}"
+                exit 1
+        else
+                rm $name${ext}_norm.txt $name${ext}.frag.txt
+        fi
+    fi
     done
 fi
 
