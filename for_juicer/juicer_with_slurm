@@ -1,0 +1,68 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --time=120:00:00
+#SBATCH --mem=120G
+#SBATCH -c 48
+#SBATCH --array=1
+#SBATCH --partition=5days
+#SBATCH --output=/data/tusers.ds/zhongrenhu/WCR/logs/juicer-log-ref_with_ref
+
+
+# Print a little info for debugging
+echo "HOSTNAME: " $(hostname)
+echo "SLURM_JOB_NODELIST: " $SLURM_JOB_NODELIST
+echo "SLURM_JOBID: " $SLURM_JOBID
+echo "SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
+echo "SLURM_ARRAY_JOB_ID: " $SLURM_ARRAY_JOB_ID
+date
+echo ""
+
+
+# Parameters initiation
+source /data/tusers/zhongrenhu/Software/anaconda3/bin/activate base
+export PATH=/data/tusers/zhongrenhu/Software/gawk-5.1.0/opt/bin:$PATH
+
+
+
+# Create temporary directory for work
+echo "Creating temporary working dir..."
+TMPDIR=$(mktemp -d -t zhongrenhu-tmp-XXXXXXXX)
+cd $TMPDIR
+echo "Changing wd: " $(pwd)
+echo ""
+
+
+# Copy inputs to temp dir
+echo "Copying inputs to $TMPDIR"
+cp -r /data/tusers/zhongrenhu/WCR/3d-dna_scaffold/ref_with_ref .
+echo "Done."
+echo ""
+
+
+# Process the data
+echo "Start running Juicer" && date
+/data/tusers/zhongrenhu/Software/for_WCR/juicer/scripts/juicer.sh -S early -D /data/tusers/zhongrenhu/Software/for_WCR/juicer -d ref_with_ref -p ref_with_ref/chrom.sizes -s "HindIII" -z ref_with_ref/references/GCF_917563875.1_PGI_DIABVI_V3a_genomic.fasta -y ref_with_ref/restriction_sites/GCF_917563875.1_PGI_DIABVI_V3a_genomic.fasta_HindIII.txt -t 32
+echo "Done."
+echo ""
+date
+
+
+# Copy files to output dir
+echo "Copying results to destination..."
+mv ref_with_ref/splits ref_with_ref/splits_done
+cp -r ref_with_ref/splits_done /data/tusers/zhongrenhu/WCR/3d-dna_scaffold/ref_with_ref
+cp -r ref_with_ref/aligned /data/tusers/zhongrenhu/WCR/3d-dna_scaffold/ref_with_ref
+echo "Done."
+echo ""
+
+
+# Clean up
+echo "Cleaning up..."
+cd $HOME
+echo "Deleting temp dir: " $TMPDIR
+rm -rd $TMPDIR
+echo "/tmp contents:"
+ls -lh /tmp
+echo ""
+echo "Script complete."
+date
